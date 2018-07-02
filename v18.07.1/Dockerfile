@@ -1,6 +1,6 @@
 # Asterisk with Lua support
 # 
-# VERSION 0.0.3
+# VERSION 18.07.1
 #
 # Contain
 #  - Asterisk 11
