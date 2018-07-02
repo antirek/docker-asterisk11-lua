@@ -9,7 +9,7 @@
 #  - mongodb driver & luamongo
 #  - g729
 
-FROM ubuntu:14.04.4
+FROM ubuntu:14.04.3
 
 MAINTAINER Sergey Dmitriev <serge.dmitriev@gmail.com>
 
@@ -18,13 +18,13 @@ MAINTAINER Sergey Dmitriev <serge.dmitriev@gmail.com>
 
 RUN apt-get check && \
     apt-get update && \
-    apt-get install -y \ 
+    apt-get install -y -f \ 
         build-essential zip unzip libreadline-dev curl libncurses-dev mc aptitude \
         tcsh scons libpcre++-dev libboost-dev libboost-all-dev libreadline-dev \
         libboost-program-options-dev libboost-thread-dev libboost-filesystem-dev \
         libboost-date-time-dev gcc g++ git lua5.1-dev make libmongo-client-dev \
         dh-autoreconf lame sox libzmq3-dev libzmqpp-dev libtiff-tools \
-	libmyodbc odbc-postgresql\
+	libmyodbc odbc-postgresql \
 	&& \
     apt-get clean
 
@@ -35,10 +35,15 @@ RUN curl -sf \
         -o /tmp/asterisk.tar.gz \
         -L http://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-11.25.3.tar.gz && \
     mkdir /tmp/asterisk && \
-    tar -xzf /tmp/asterisk.tar.gz -C /tmp/asterisk --strip-components=1 && \
-    cd /tmp/asterisk && \
-    contrib/scripts/install_prereq install && \
-    ./configure && \
+    tar -xzf /tmp/asterisk.tar.gz -C /tmp/asterisk --strip-components=1
+
+WORKDIR /tmp/asterisk
+
+RUN apt-get remove -y rsyslog
+
+RUN contrib/scripts/install_prereq install
+    
+RUN ./configure && \
     make menuselect.makeopts && \
     menuselect/menuselect \
     --disable CORE-SOUNDS-ES-G729 \
@@ -494,9 +499,11 @@ RUN mkdir /tmp/luarocks && \
 
 ## Install luasec
 
-RUN git clone https://github.com/antirek/luasec.git /tmp/luasec && \
+RUN apt-get install -y git
+
+RUN git clone https://github.com/brunoos/luasec.git /tmp/luasec && \
     cd /tmp/luasec && \
-    luarocks install luasec-0.6-1.rockspec
+    luarocks install luasec-0.7-1.rockspec
 
 
 ## Install rocks
@@ -515,7 +522,8 @@ RUN luarocks install luasocket && \
     luarocks install moses && \
     luarocks install luacrypto && \
     luarocks install httpclient && \
-    luarocks install lualogging 
+    luarocks install lualogging && \
+    luarocks install luchia
 
 ## add luasql libs
 
