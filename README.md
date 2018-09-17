@@ -6,9 +6,19 @@
 Use in Dockerfile 
 
 `````
-FROM antirek/asterisk11-lua:18.07.2
+FROM antirek/asterisk11-lua:18.09.1
 
+CMD asterisk && tail -f /var/log/asterisk/messages
 `````
+
+## v18.09.1
+
+- luarocks up to 2.4.4
+
+- base ubuntu to 14.04.4
+
+- add luarocks tarantool
+
 
 ## v18.07.2
 

@@ -1,5 +1,0 @@
-docker run --name=test -it \
-    --net='host' \
-    --rm \
-    --volume /tmp:/1 \
-    antirek/asterisk11-lua bash
