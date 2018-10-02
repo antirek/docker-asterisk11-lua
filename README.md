@@ -6,10 +6,17 @@
 Use in Dockerfile 
 
 `````
-FROM antirek/asterisk11-lua:18.09.1
+FROM antirek/asterisk11-lua:18.10.1
 
-CMD asterisk && tail -f /var/log/asterisk/messages
+CMD asterisk -cfvvvvvvvvv
 `````
+
+## v18.10.1
+
+- add [lua ohm](https://github.com/antirek/ohm.lua)
+
+- add [resp](https://github.com/antirek/resp)
+
 
 ## v18.09.1
 
