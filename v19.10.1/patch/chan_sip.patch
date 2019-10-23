@@ -1,0 +1,41 @@
+--- chan_sip.c.orig	2017-09-19 23:03:38.000000000 +0700
++++ chan_sip.c	2019-10-23 10:42:19.197167226 +0700
+@@ -21568,7 +21568,7 @@
+ 	/* Need to check the media/type */
+ 	if (!strcasecmp(c, "application/dtmf-relay") ||
+ 	    !strcasecmp(c, "application/vnd.nortelnetworks.digits") ||
+-	    !strcasecmp(c, "application/dtmf")) {
++	    !strcasecmp(c, "application/dtmf") || !strcasecmp(c, "application/hook-flash")) {
+ 		unsigned int duration = 0;
+ 
+ 		if (!p->owner) {	/* not a PBX call */
+@@ -21607,7 +21607,10 @@
+ 			duration = 100; /* 100 ms */
+ 		}
+ 
+-		if (buf[0] == '*') {
++		if (!strcasecmp(c,"application/hook-flash")) {
++		    ast_log(LOG_WARNING, "GET DTMF INFO FLASH its normal\n");
++		    event = 16;
++		} else if (buf[0] == '*') {
+ 			event = 10;
+ 		} else if (buf[0] == '#') {
+ 			event = 11;
+@@ -21624,7 +21627,7 @@
+ 			return;
+ 		}
+ 
+-		if (event == 16) {
++		if (event == 17) {
+ 			/* send a FLASH event */
+ 			struct ast_frame f = { AST_FRAME_CONTROL, { AST_CONTROL_FLASH, } };
+ 			ast_queue_frame(p->owner, &f);
+@@ -21640,6 +21643,8 @@
+ 				f.subclass.integer = '*';
+ 			} else if (event == 11) {
+ 				f.subclass.integer = '#';
++			} else if (event == 16) {
++				f.subclass.integer = '!';
+ 			} else {
+ 				f.subclass.integer = 'A' + (event - 12);
+ 			}
