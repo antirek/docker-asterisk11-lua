@@ -1,6 +1,15 @@
 --- res_rtp_asterisk.c.orig	2017-09-19 23:03:38.000000000 +0700
-+++ res_rtp_asterisk.c	2019-10-23 10:48:51.036587763 +0700
-@@ -2884,6 +2884,8 @@
++++ res_rtp_asterisk.c	2019-10-30 13:49:19.054000451 +0700
+@@ -2764,6 +2764,8 @@
+ 		digit = 10;
+ 	} else if (digit == '#') {
+ 		digit = 11;
++	} else if (digit == '!') {
++		digit = 16;
+ 	} else if ((digit >= 'A') && (digit <= 'D')) {
+ 		digit = digit - 'A' + 12;
+ 	} else if ((digit >= 'a') && (digit <= 'd')) {
+@@ -2884,6 +2886,8 @@
  		digit = 10;
  	} else if (digit == '#') {
  		digit = 11;
